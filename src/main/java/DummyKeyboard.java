@@ -66,34 +66,35 @@ public class DummyKeyboard implements NativeKeyListener {
 		switch (e.getKeyCode()) {
 		case 57416:
 			System.out.println("UP");
-			if (mouseX == 0) {
+//			if (mouseX == 0) {
 				PointerInfo a = MouseInfo.getPointerInfo();
 				java.awt.Point b = a.getLocation();
 				mouseX = (int) b.getX();
 				mouseY = (int) b.getY();
-			}
+//			}
 			bot.mousePress(mask);
 			bot.mouseRelease(mask);
 			break;
-		case 57419:
-			System.out.println("LEFT");
-			bot.mouseMove(mouseX - 100, mouseY + 120);
-			// mouseX
-			bot.mousePress(mask);
-			bot.mouseRelease(mask);
-			bot.mouseMove(mouseX, mouseY);
-			break;
-		case 57421:
-			System.out.println("RIGHT");
-			bot.mouseMove(mouseX + 100, mouseY + 120);
-			bot.mousePress(mask);
-			bot.mouseRelease(mask);
-			bot.mouseMove(mouseX, mouseY);
-			break;
+		// case 57419:
+		// System.out.println("LEFT");
+		// bot.mouseMove(mouseX - 100, mouseY + 150);
+		// // mouseX
+		// bot.mousePress(mask);
+		// bot.mouseRelease(mask);
+		// bot.mouseMove(mouseX, mouseY);
+		// break;
+		// case 57421:
+		// System.out.println("RIGHT");
+		// bot.mouseMove(mouseX + 100, mouseY + 150);
+		// bot.mousePress(mask);
+		// bot.mouseRelease(mask);
+		// bot.mouseMove(mouseX, mouseY);
+		// break;
 		case 57424:
 			System.out.println("DOWN");
 			String format = "jpg";
 			String fileName = System.getProperty("user.dir") + "/FullScreenshot." + format;
+			// System.out.println(fileName);
 
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
@@ -162,9 +163,9 @@ public class DummyKeyboard implements NativeKeyListener {
 		// read in image default colors
 		// This call is extremely slow when running in commandline with the
 		// exported .jar file
-		
+
 		Mat sourceColor = imread(files[0]);
-		
+
 		Mat sourceGrey = new Mat(sourceColor.size(), CV_8UC1);
 		cvtColor(sourceColor, sourceGrey, COLOR_BGR2GRAY);
 		// load in template in grey
