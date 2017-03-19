@@ -66,12 +66,14 @@ public class DummyKeyboard implements NativeKeyListener {
 		switch (e.getKeyCode()) {
 		case 57416:
 			System.out.println("UP");
-			if (mouseX == 0) {
-				PointerInfo a = MouseInfo.getPointerInfo();
-				java.awt.Point b = a.getLocation();
-				mouseX = (int) b.getX();
-				mouseY = (int) b.getY();
-			}
+			// if (mouseX == 0) {
+			PointerInfo a = MouseInfo.getPointerInfo();
+			java.awt.Point b = a.getLocation();
+			mouseX = (int) b.getX();
+			mouseY = (int) b.getY();
+			System.out.println("mouseX: " + mouseX + " === mouseY: " + mouseY);
+			// }
+			bot.mouseMove(mouseX, mouseY);
 			bot.mousePress(mask);
 			bot.mouseRelease(mask);
 			break;
@@ -98,9 +100,12 @@ public class DummyKeyboard implements NativeKeyListener {
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
 			try {
+				System.out.println("Save screenshot...");
 				ImageIO.write(screenFullImage, format, new File(fileName));
+				System.out.println("Call newStyle()...");
 				String myArgs[] = new String[] { fileName, System.getProperty("user.dir") + "/speaker.jpg" };
 				Point target = newStyle(myArgs);
+				System.out.println("newStyle() called...");
 				// System.out.println("X: " + target.x() + " === Y: " +
 				// target.y());
 				bot.mouseMove(target.x() + 10, target.y() + 15);
@@ -162,9 +167,9 @@ public class DummyKeyboard implements NativeKeyListener {
 		// read in image default colors
 		// This call is extremely slow when running in commandline with the
 		// exported .jar file
-		
+
 		Mat sourceColor = imread(files[0]);
-		
+
 		Mat sourceGrey = new Mat(sourceColor.size(), CV_8UC1);
 		cvtColor(sourceColor, sourceGrey, COLOR_BGR2GRAY);
 		// load in template in grey
