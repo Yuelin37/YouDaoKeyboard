@@ -66,7 +66,6 @@ public class DummyKeyboard implements NativeKeyListener {
 		switch (e.getKeyCode()) {
 		case 57416:
 			System.out.println("UP");
-<<<<<<< HEAD
 			// if (mouseX == 0) {
 			PointerInfo a = MouseInfo.getPointerInfo();
 			java.awt.Point b = a.getLocation();
@@ -75,14 +74,6 @@ public class DummyKeyboard implements NativeKeyListener {
 			System.out.println("mouseX: " + mouseX + " === mouseY: " + mouseY);
 			// }
 			bot.mouseMove(mouseX, mouseY);
-=======
-//			if (mouseX == 0) {
-				PointerInfo a = MouseInfo.getPointerInfo();
-				java.awt.Point b = a.getLocation();
-				mouseX = (int) b.getX();
-				mouseY = (int) b.getY();
-//			}
->>>>>>> 0c72cf0c147a7c694e27155e789ea5de31a6ff93
 			bot.mousePress(mask);
 			bot.mouseRelease(mask);
 			break;
