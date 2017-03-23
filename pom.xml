@@ -22,10 +22,13 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/nu.pattern/opencv -->
+		<!-- <dependency> <groupId>nu.pattern</groupId> <artifactId>opencv</artifactId> 
+			<version>2.4.9-4</version> </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.bytedeco.javacpp-presets/opencv -->
 		<dependency>
-			<groupId>nu.pattern</groupId>
+			<groupId>org.bytedeco.javacpp-presets</groupId>
 			<artifactId>opencv</artifactId>
-			<version>2.4.9-4</version>
+			<version>3.1.0-1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bytedeco</groupId>

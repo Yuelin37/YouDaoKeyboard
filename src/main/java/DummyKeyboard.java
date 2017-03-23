@@ -1,9 +1,11 @@
 import static org.bytedeco.javacpp.opencv_core.CV_32FC1;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
+import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 import static org.bytedeco.javacpp.opencv_core.minMaxLoc;
 import static org.bytedeco.javacpp.opencv_highgui.destroyAllWindows;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 import static org.bytedeco.javacpp.opencv_imgproc.COLOR_BGR2GRAY;
 import static org.bytedeco.javacpp.opencv_imgproc.TM_CCORR_NORMED;
 import static org.bytedeco.javacpp.opencv_imgproc.cvtColor;
@@ -17,6 +19,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,11 +31,14 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import org.bytedeco.javacpp.DoublePointer;
+import org.bytedeco.javacpp.opencv_core.CvType;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_core.Point;
 import org.bytedeco.javacpp.opencv_core.Rect;
 import org.bytedeco.javacpp.opencv_core.Scalar;
 import org.bytedeco.javacpp.opencv_core.Size;
+import org.bytedeco.javacpp.opencv_imgcodecs;
+import static org.bytedeco.javacpp.opencv_core.cvCreateMat;
 import org.bytedeco.javacpp.indexer.FloatIndexer;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -187,12 +193,6 @@ public class DummyKeyboard implements NativeKeyListener {
 		minMaxLoc(result, minVal, maxVal, min, max, null);
 		rectangle(sourceColor, new Rect(max.x(), max.y(), template.cols(), template.rows()), randColor(), 2, 0, 0);
 
-		// System.out.println(max.x());
-		// System.out.println(max.y());
-		// imshow("Original marked", sourceColor);
-		// imshow("Ttemplate", template);
-		// imshow("Results matrix", result);
-		// waitKey(0);
 		destroyAllWindows();
 
 		return (max);
@@ -221,5 +221,14 @@ public class DummyKeyboard implements NativeKeyListener {
 		}
 		return matches;
 	}
+	
+	public static Mat bufferedImageToMat(BufferedImage bi) {
+//		  Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CV_8UC3);
+		  byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+//		  mat.put(0, 0, data);
+//		  Mat mat = Imgcodecs.imdecode(new MatOfByte(data), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+		  Mat mat = new Mat(data);
+		  return mat;
+		}
 
 }
