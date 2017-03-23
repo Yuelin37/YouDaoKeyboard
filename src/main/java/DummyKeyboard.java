@@ -109,7 +109,7 @@ public class DummyKeyboard implements NativeKeyListener {
 				System.out.println("newStyle() called...");
 				// System.out.println("X: " + target.x() + " === Y: " +
 				// target.y());
-				bot.mouseMove(target.x() + 10, target.y() + 15);
+				bot.mouseMove(target.x() + 10, target.y() + 20);
 				bot.mousePress(mask);
 				bot.mouseRelease(mask);
 				// System.out.println("DOWN clicked...");
