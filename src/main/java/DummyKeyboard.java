@@ -95,6 +95,16 @@ public class DummyKeyboard implements NativeKeyListener {
 
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
+			// In previous versions I save screenFullImage
+			// to a .png file on disk
+			// and then pass the filename to findTarget() and findTarget will
+			// read the file to process.
+			// This write/read operation is expensive.
+			// Now use the following line to covert screenFullImage
+			// (BufferedImage) to mat (Mat) directly
+			// and then pass it to findTarget()
+			// Learn this method from
+			// https://github.com/bytedeco/javacv/blob/master/samples/BioInspiredRetina.java
 			Mat mat = new OpenCVFrameConverter.ToMat().convert(new Java2DFrameConverter().convert(screenFullImage));
 
 			Point speaker = findTarget(mat, target);
