@@ -47,7 +47,7 @@ public class DummyKeyboard implements NativeKeyListener {
 
 	// Get the logger for "org.jnativehook" and set the level to off.
 	private final static Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
-	
+
 	Mat target = imread(System.getProperty("user.dir") + "/speaker.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	public void nativeKeyPressed(NativeKeyEvent e) {
@@ -66,13 +66,11 @@ public class DummyKeyboard implements NativeKeyListener {
 		switch (e.getKeyCode()) {
 		case 57416:
 			System.out.println("UP");
-			// if (mouseX == 0) {
 			PointerInfo a = MouseInfo.getPointerInfo();
 			java.awt.Point b = a.getLocation();
 			mouseX = (int) b.getX();
 			mouseY = (int) b.getY();
 			System.out.println("mouseX: " + mouseX + " === mouseY: " + mouseY);
-			// }
 			bot.mouseMove(mouseX, mouseY);
 			bot.mousePress(mask);
 			bot.mouseRelease(mask);
@@ -98,7 +96,7 @@ public class DummyKeyboard implements NativeKeyListener {
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
 			Mat mat = new OpenCVFrameConverter.ToMat().convert(new Java2DFrameConverter().convert(screenFullImage));
-			
+
 			Point speaker = findTarget(mat, target);
 			System.out.println("newStyle() called...");
 			// System.out.println("X: " + target.x() + " === Y: " +
