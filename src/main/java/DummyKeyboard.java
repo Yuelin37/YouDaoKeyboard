@@ -1,11 +1,9 @@
 import static org.bytedeco.javacpp.opencv_core.CV_32FC1;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
-import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 import static org.bytedeco.javacpp.opencv_core.minMaxLoc;
 import static org.bytedeco.javacpp.opencv_highgui.destroyAllWindows;
 import static org.bytedeco.javacpp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
-import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 import static org.bytedeco.javacpp.opencv_imgproc.COLOR_BGR2GRAY;
 import static org.bytedeco.javacpp.opencv_imgproc.TM_CCORR_NORMED;
 import static org.bytedeco.javacpp.opencv_imgproc.cvtColor;
@@ -19,28 +17,21 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
-
 import org.bytedeco.javacpp.DoublePointer;
-import org.bytedeco.javacpp.opencv_core.CvType;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_core.Point;
 import org.bytedeco.javacpp.opencv_core.Rect;
 import org.bytedeco.javacpp.opencv_core.Scalar;
 import org.bytedeco.javacpp.opencv_core.Size;
-import org.bytedeco.javacpp.opencv_imgcodecs;
-import static org.bytedeco.javacpp.opencv_core.cvCreateMat;
 import org.bytedeco.javacpp.indexer.FloatIndexer;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -56,6 +47,8 @@ public class DummyKeyboard implements NativeKeyListener {
 
 	// Get the logger for "org.jnativehook" and set the level to off.
 	private final static Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+	
+	Mat target = imread(System.getProperty("user.dir") + "/speaker.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	public void nativeKeyPressed(NativeKeyEvent e) {
 		if (e.getKeyCode() == 63) {
@@ -101,47 +94,26 @@ public class DummyKeyboard implements NativeKeyListener {
 		// break;
 		case 57424:
 			System.out.println("DOWN");
-			String format = "jpg";
-			String fileName = System.getProperty("user.dir") + "/FullScreenshot." + format;
-			// System.out.println(fileName);
 
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
-			Mat mat;
-			try {
-				mat = bufferedImageToMat(screenFullImage);
-				System.out.println("bufferedImageToMat() called...");
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			try {
-				System.out.println("Save screenshot...");
-				ImageIO.write(screenFullImage, format, new File(fileName));
-				System.out.println("Call newStyle()...");
-				String myArgs[] = new String[] { fileName, System.getProperty("user.dir") + "/speaker.jpg" };
-				Point target = newStyle(myArgs);
-				System.out.println("newStyle() called...");
-				// System.out.println("X: " + target.x() + " === Y: " +
-				// target.y());
-				bot.mouseMove(target.x() + 10, target.y() + 20);
-				bot.mousePress(mask);
-				bot.mouseRelease(mask);
-				// System.out.println("DOWN clicked...");
-				bot.mouseMove(mouseX, mouseY);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			Mat mat = new OpenCVFrameConverter.ToMat().convert(new Java2DFrameConverter().convert(screenFullImage));
+			
+			Point speaker = findTarget(mat, target);
+			System.out.println("newStyle() called...");
+			// System.out.println("X: " + target.x() + " === Y: " +
+			// target.y());
+			bot.mouseMove(speaker.x() + 10, speaker.y() + 20);
+			bot.mousePress(mask);
+			bot.mouseRelease(mask);
+			// System.out.println("DOWN clicked...");
+			bot.mouseMove(mouseX, mouseY);
 
 		default:
 			// System.out.println("KeyCode: " + e.getKeyCode());
 
 		}
 
-		// if (e.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
-		// GlobalScreen.unregisterNativeHook();
-		// }
 	}
 
 	public void nativeKeyReleased(NativeKeyEvent e) {
@@ -179,17 +151,15 @@ public class DummyKeyboard implements NativeKeyListener {
 		GlobalScreen.addNativeKeyListener(new DummyKeyboard());
 	}
 
-	public static Point newStyle(String[] files) {
+	public static Point findTarget(Mat sourceColor, Mat target) {
 		// read in image default colors
 		// This call is extremely slow when running in commandline with the
 		// exported .jar file
 
-		Mat sourceColor = imread(files[0]);
-
 		Mat sourceGrey = new Mat(sourceColor.size(), CV_8UC1);
 		cvtColor(sourceColor, sourceGrey, COLOR_BGR2GRAY);
 		// load in template in grey
-		Mat template = imread(files[1], CV_LOAD_IMAGE_GRAYSCALE);// int = 0
+		Mat template = target;
 		// Size for the result image
 		Size size = new Size(sourceGrey.cols() - template.cols() + 1, sourceGrey.rows() - template.rows() + 1);
 		Mat result = new Mat(size, CV_32FC1);
@@ -230,17 +200,4 @@ public class DummyKeyboard implements NativeKeyListener {
 		}
 		return matches;
 	}
-	
-	public static Mat bufferedImageToMat(BufferedImage bi) throws IOException {
-
-//		  byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
-		  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		  ImageIO.write(bi, "png", baos);
-		  byte[] data = baos.toByteArray();
-
-		  Mat mat = new Mat(data);
-		  
-		  return mat;
-		}
-
 }
