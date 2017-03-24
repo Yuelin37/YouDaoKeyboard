@@ -98,7 +98,7 @@ public class DummyKeyboard implements NativeKeyListener {
 			Mat mat = new OpenCVFrameConverter.ToMat().convert(new Java2DFrameConverter().convert(screenFullImage));
 
 			Point speaker = findTarget(mat, target);
-			System.out.println("newStyle() called...");
+			// System.out.println("newStyle() called...");
 			// System.out.println("X: " + target.x() + " === Y: " +
 			// target.y());
 			bot.mouseMove(speaker.x() + 10, speaker.y() + 20);
