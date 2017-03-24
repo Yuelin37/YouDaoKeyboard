@@ -20,6 +20,7 @@ import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,6 +107,14 @@ public class DummyKeyboard implements NativeKeyListener {
 
 			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 			BufferedImage screenFullImage = bot.createScreenCapture(screenRect);
+			Mat mat;
+			try {
+				mat = bufferedImageToMat(screenFullImage);
+				System.out.println("bufferedImageToMat() called...");
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			try {
 				System.out.println("Save screenshot...");
 				ImageIO.write(screenFullImage, format, new File(fileName));
@@ -222,12 +231,15 @@ public class DummyKeyboard implements NativeKeyListener {
 		return matches;
 	}
 	
-	public static Mat bufferedImageToMat(BufferedImage bi) {
-//		  Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CV_8UC3);
-		  byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
-//		  mat.put(0, 0, data);
-//		  Mat mat = Imgcodecs.imdecode(new MatOfByte(data), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
+	public static Mat bufferedImageToMat(BufferedImage bi) throws IOException {
+
+//		  byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+		  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		  ImageIO.write(bi, "png", baos);
+		  byte[] data = baos.toByteArray();
+
 		  Mat mat = new Mat(data);
+		  
 		  return mat;
 		}
 
