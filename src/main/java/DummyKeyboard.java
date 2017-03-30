@@ -64,6 +64,7 @@ public class DummyKeyboard implements NativeKeyListener {
 		// System.out.println("mouseY" + mouseY);
 
 		switch (e.getKeyCode()) {
+		case 32:
 		case 57416:
 			System.out.println("UP");
 			PointerInfo a = MouseInfo.getPointerInfo();
@@ -76,20 +77,23 @@ public class DummyKeyboard implements NativeKeyListener {
 			bot.mouseRelease(mask);
 			break;
 		// case 57419:
-		// System.out.println("LEFT");
-		// bot.mouseMove(mouseX - 100, mouseY + 150);
-		// // mouseX
-		// bot.mousePress(mask);
-		// bot.mouseRelease(mask);
-		// bot.mouseMove(mouseX, mouseY);
-		// break;
+		case 44:
+			System.out.println("LEFT");
+			bot.mouseMove(mouseX - 90, mouseY + 140);
+			// mouseX
+			bot.mousePress(mask);
+			bot.mouseRelease(mask);
+			bot.mouseMove(mouseX, mouseY);
+			break;
 		// case 57421:
-		// System.out.println("RIGHT");
-		// bot.mouseMove(mouseX + 100, mouseY + 150);
-		// bot.mousePress(mask);
-		// bot.mouseRelease(mask);
-		// bot.mouseMove(mouseX, mouseY);
-		// break;
+		case 46:
+			System.out.println("RIGHT");
+			bot.mouseMove(mouseX + 90, mouseY + 140);
+			bot.mousePress(mask);
+			bot.mouseRelease(mask);
+			bot.mouseMove(mouseX, mouseY);
+			break;
+		case 45:
 		case 57424:
 			System.out.println("DOWN");
 
@@ -125,8 +129,8 @@ public class DummyKeyboard implements NativeKeyListener {
 	}
 
 	public void nativeKeyReleased(NativeKeyEvent e) {
-		// System.out.println("Key Released: " +
-		// NativeKeyEvent.getKeyText(e.getKeyCode()));
+		System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+		System.out.println("KeyCode: " + e.getKeyCode());
 	}
 
 	public void nativeKeyTyped(NativeKeyEvent e) {
