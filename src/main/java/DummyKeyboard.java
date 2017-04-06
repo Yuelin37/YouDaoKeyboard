@@ -57,6 +57,7 @@ public class DummyKeyboard implements NativeKeyListener {
 		if (Pause) {
 			return;
 		}
+		
 		// System.out.println("Key Pressed: " +
 		// NativeKeyEvent.getKeyText(e.getKeyCode()));
 		//
