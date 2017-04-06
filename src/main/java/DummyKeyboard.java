@@ -78,6 +78,7 @@ public class DummyKeyboard implements NativeKeyListener {
 			break;
 		// case 57419:
 		case 44:
+		case 18: // e
 			System.out.println("LEFT");
 			bot.mouseMove(mouseX - 90, mouseY + 140);
 			// mouseX
@@ -87,6 +88,7 @@ public class DummyKeyboard implements NativeKeyListener {
 			break;
 		// case 57421:
 		case 46:
+		case 33: // f
 			System.out.println("RIGHT");
 			bot.mouseMove(mouseX + 90, mouseY + 140);
 			bot.mousePress(mask);
@@ -94,6 +96,7 @@ public class DummyKeyboard implements NativeKeyListener {
 			bot.mouseMove(mouseX, mouseY);
 			break;
 		case 45:
+		case 19: // r
 		case 57424:
 			System.out.println("DOWN");
 
